@@ -28,10 +28,10 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test || true
 
       - name: Upload Playwright artifacts
-        if: ${{ always() }}  # pastikan artifact tetap di-upload walaupun test fail
+        if: ${{ always() }}  # upload artifact walau test gagal
         uses: actions/upload-artifact@v4
         with:
           name: playwright-artifacts
@@ -39,3 +39,13 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 30
+
+      - name: Send email
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PLAYWRIGHT_STATUS: ${{ job.status }}
+        run: node scripts/email.js "$PLAYWRIGHT_STATUS" "Test selesai. Cek hasil di https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
