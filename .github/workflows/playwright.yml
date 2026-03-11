@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:   # <- button Run workflow
 
 jobs:
   test:
@@ -18,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*  # versi Node LTS terbaru
+          node-version: lts/*
           cache: npm
 
       - name: Install dependencies
@@ -31,7 +32,7 @@ jobs:
         run: npx playwright test || true
 
       - name: Upload Playwright artifacts
-        if: ${{ always() }}  # upload artifact walau test gagal
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-artifacts
