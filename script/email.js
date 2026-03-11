@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 async function sendEmail(subject, text) {
   const transporter = nodemailer.createTransport({
-    service: 'gmail', // ganti sesuai provider email kamu
+    service: 'gmail', // ganti sesuai  email kamu
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
